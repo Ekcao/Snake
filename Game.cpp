@@ -1,17 +1,14 @@
 #include "Game.h"
 
 const sf::Time Game::TIME_PER_FRAME = sf::seconds(1.f / 5.f);
-const float Game::WINDOW_SIZE = 640.0;
+const int Game::WINDOW_SIZE = 640;
 const int Game::SCALE = 40;
+float Game::blockSize = floor(Game::WINDOW_SIZE / Game::SCALE);
 
 Game::Game() :
     window(sf::VideoMode(WINDOW_SIZE, WINDOW_SIZE), "Snake"),
-    direction(Direction::Right) {
-    blockSize = floor(WINDOW_SIZE / SCALE);
-    rect.setSize(sf::Vector2f(blockSize, blockSize));
-    rect.setPosition(0, 0);
-    rect.setFillColor(sf::Color::Blue);
-}
+    direction(Direction::Right),
+    snake(blockSize) {}
 
 /* The main loop of the game. */
 void Game::run() {
@@ -67,30 +64,32 @@ void Game::processInput(sf::Keyboard::Key key) {
 }
 
 void Game::update(sf::Time dt) {
-    sf::Vector2f movement(0.f, 0.f);
+    sf::Vector2f velocity(0.f, 0.f);
 
     switch (direction) {
     case Direction::Up:
-        movement.y -= blockSize;
+        velocity.y = -1;
         break;
     case Direction::Down:
-        movement.y += blockSize;
+        velocity.y = 1;
         break;
     case Direction::Left:
-        movement.x -= blockSize;
+        velocity.x = -1;
         break;
     case Direction::Right:
-        movement.x += blockSize;
+        velocity.x = 1;
         break;
-    default: break;
+    default: 
+        break;
     }
 
-    rect.move(movement);
+    snake.setVelocity(velocity);
+    snake.update();
 }
 
 void Game::render() {
     window.clear();
-    window.draw(rect);
+    window.draw(snake);
     window.display();
 }
 
