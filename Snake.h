@@ -4,19 +4,17 @@
 
 class Snake : public sf::Drawable {
 private:
-    float size;
-    float x;
-    float y;
+    float blockSize;
     sf::Vector2f velocity;
-    sf::RectangleShape head;
+    std::vector<sf::RectangleShape> body;
 
 public:
     Snake(float blockSize);
-    ~Snake();
 
     void setVelocity(sf::Vector2f velocity);
     void setVelocity(float dx, float dy);
     void update();
+    void grow();
     // Inherited via Drawable
     virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 };

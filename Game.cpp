@@ -1,14 +1,17 @@
 #include "Game.h"
 
-const sf::Time Game::TIME_PER_FRAME = sf::seconds(1.f / 5.f);
+const sf::Time Game::TIME_PER_FRAME = sf::seconds(1.f / 7.f);
 const int Game::WINDOW_SIZE = 640;
-const int Game::SCALE = 40;
+const int Game::SCALE = 64;
 float Game::blockSize = floor(Game::WINDOW_SIZE / Game::SCALE);
 
 Game::Game() :
     window(sf::VideoMode(WINDOW_SIZE, WINDOW_SIZE), "Snake"),
     direction(Direction::Right),
-    snake(blockSize) {}
+    snake(blockSize) {
+    snake.grow();
+    snake.grow();
+}
 
 /* The main loop of the game. */
 void Game::run() {

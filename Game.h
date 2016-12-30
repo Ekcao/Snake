@@ -22,10 +22,10 @@ private:
     void render();
 
 public:
+    static float blockSize;
+
     Game();
     ~Game();
     void run();
-
-    static float blockSize;
 };
 

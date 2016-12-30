@@ -1,12 +1,15 @@
 #include "Snake.h"
 
-Snake::Snake(float size) : size(size), x(0), y(0), velocity(1.0, 0.0) {
-    head.setSize(sf::Vector2f(size, size));
-    head.setPosition(sf::Vector2f(x, y));
-    head.setFillColor(sf::Color::White);
-}
+Snake::Snake(float blockSize) :
+    blockSize(blockSize), 
+    velocity(1.0, 0.0) {
 
-Snake::~Snake() {}
+    sf::RectangleShape head(sf::Vector2f(blockSize, blockSize));
+    head.setPosition(sf::Vector2f(0, 0));
+    head.setFillColor(sf::Color::White);
+
+    body.push_back(head);
+}
 
 void Snake::setVelocity(sf::Vector2f velocity) {
     this->velocity = velocity;
@@ -18,12 +21,26 @@ void Snake::setVelocity(float dx, float dy) {
 }
 
 void Snake::update() {
-    sf::Vector2f offset;
-    offset.x = velocity.x * size;
-    offset.y = velocity.y * size;
-    head.move(offset);
+    grow();
+    body.pop_back();
 }
 
-void Snake::draw(sf::RenderTarget & target, sf::RenderStates states) const {    
-    target.draw(head);
+// Grows the snake by adding a new rect to the front.
+void Snake::grow() {
+    sf::Vector2f prevHead(body.front().getPosition());
+    sf::Vector2f updatedHead;
+    updatedHead.x = prevHead.x + (velocity.x * blockSize);
+    updatedHead.y = prevHead.y + (velocity.y * blockSize);
+
+    sf::RectangleShape rect(sf::Vector2f(blockSize, blockSize));
+    rect.setPosition(updatedHead);
+    rect.setFillColor(sf::Color::White);
+
+    body.insert(body.begin(), rect);
+}
+
+void Snake::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+    for (const auto & rect : body) {
+        target.draw(rect);
+    }
 }
